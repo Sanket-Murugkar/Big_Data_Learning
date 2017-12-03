@@ -1,6 +1,0 @@
-import abc
-
-while(true)
-	abc.method()
-	value=imput
-	reload(abc)

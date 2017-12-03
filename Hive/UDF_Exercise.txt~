@@ -1,3 +1,0 @@
-ADD JAR /home/itelligence/Desktop/Hive/TOUPPER_UDF.jar; 
-
- create TEMPORARY FUNCTION UP AS 'com.udf.TOUPPER';

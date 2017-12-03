@@ -1,7 +1,0 @@
-import sys
-
-print("Numbeer of arguments are",len(sys.argv))
-
-print("Arguments are :",str(sys.argv))
-
-# Passing arguments to file
