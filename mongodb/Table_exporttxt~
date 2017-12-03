@@ -1,0 +1,43 @@
+mongoexport --db vaibhav --collection emp --fields 
+EMPLOYEE_ID,FIRST_NAME --out /home/itelligence/Desktop/mongodb/exported/emp.csv;
+
+
+
+mongoexport --db vaibhav --collection emp --fields 
+EMPLOYEE_ID,FIRST_NAME  --out /home/itelligence/Desktop/mongodb/exported/emp.csv -q '{SALARY:(&gt>5000)}';
+
+
+
+............................................................
+
+
+A= LOAD 'mongodb://localhost:27017/vaibhav.emp' USING 
+com.mongodb.hadoop.pig.MongoLoader();
+
+
+B= FOREACH emp GENERATE $1,$2;
+
+
+
+STORE emp into 'mongodb://localhost:27017/vaibhav.emp' using 
+com.mongodb.hadoop.pig.MongoStorage();
+
+.............HIVE INTEGRATION WITH MONGODB..................
+
+
+create table emp
+
+(
+AID INT, EMPLOYEE_ID int, FIRST_NAME String 
+
+)
+STORED BY 'com.mongodb.hadoop.hive.MongoStorageHandler'
+WITH SERDEPROPERTIES
+('mongo.column.mapping'=
+'{AID:_id,EMPLOYEE_ID:EMPLOYEE_ID,FIRST_NAME:FIRST:NAME}'
+)
+TBLPROPERTIES ('mongo.url'='mongodb://localhost:27017/vaibhav.emp');
+
+......................................................................
+
+

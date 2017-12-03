@@ -1,0 +1,10 @@
+DEFINE ABC (A,sortKey,filter_key) returns C
+{
+B=FILTER $A by $filter_key>30;
+$c=oreder B by $sortKey;
+
+}
+
+
+
+Q= ABC(EMP,FIRST_NAME,SALARY);

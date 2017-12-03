@@ -1,0 +1,38 @@
+
+1)Create a new table
+
+sqoop import --connect jdbc:mysql://localhost:3306/vaibhav --table employees --username root --password hr --create-hive-table --hive-import
+
+............................................................
+
+2) Use Existing table
+
+sqoop import --connect jdbc:mysql://localhost:3306/vaibhav --table employees  --username root --password hr --hive-table employess --hive-import
+
+..............................................................
+3)Use table created in hive 
+
+Here Data will be null as delimiter is different 
+
+CREATE TABLE emp2
+(
+EMPLOYEE_ID INT,FIRST_NAME STRING,LAST_NAME STRING,EMAIL STRING,PHONE_NUMBER STRING,HIRE_DATE STRING,JOB_ID STRING,SALARY INT,MANAGER_ID INT,DEPARTMENT_ID INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+;
+
+
+sqoop import --connect jdbc:mysql://localhost:3306/vaibhav --table employees  --username root --password hr --hive-table emp2 --hive-import
+
+........................................................................
+
+4)Partition 
+
+sqoop import --connect jdbc:mysql://localhost:3306/vaibhav --table employees  --username root --password hr --hive-table emp2 --hive-import
+hive--partition-key by department_id
+
+
+
+

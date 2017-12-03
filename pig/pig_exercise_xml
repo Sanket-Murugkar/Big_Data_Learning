@@ -1,0 +1,19 @@
+REGISTER /home/itelligence/pig-0.11.1/contrib/piggybank/java/piggybank.jar;
+
+
+EMP = LOAD '/home/itelligence/Desktop/nested_xml.xml' using org.apache.pig.piggybank.storage.XMLLoader('record');
+
+
+B = FOREACH EMP GENERATE FLATTEN(
+REGEX_EXTRACT_ALL($0,'<record>\\s* 
+<id>(.*)</id>\\s*<name>(.*)</name>\\s*
+<fn>(.*)</fn>\\s*
+<ln>(.*)</ln>\\s* 
+<salary>(.*)</salary>\\s* 
+</record>'
+)
+);
+
+DUMP B;
+
+

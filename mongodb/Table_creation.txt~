@@ -1,0 +1,189 @@
+
+
+..................CREATE DATABASE..........................
+ mongoimport --db vaibhav --collection emp --type csv --headerline --file /home/itelligence/Dataset/CSV/EMP.cs
+
+
+.......................SELECT ALL.................................
+
+
+use vaibhav;
+show collections;
+db.emp.find();    (Like select )
+....................SELECT OPERATION.........................
+
+({},{})
+
+first filter '  second curly bracket for select
+
+
+
+db.emp.find({},
+{
+FIRST_NAME: 1,
+LAST_NAME: 1,
+_id: 0
+});
+
+type 'it' command to view next set of commands
+
+db.emp.find({},
+{
+FIRST_NAME:1,
+LAST_NAME:1
+});
+
+.....................SORTING DATA........................................
+
+
+db.emp.find({},
+{
+FIRST_NAME:1,
+LAST_NAME:1
+}).sort(
+{FIRST_NAME:1
+}
+)
+;
+
+db.emp.find({},
+{
+FIRST_NAME:1,
+LAST_NAME:1
+}).sort(
+{FIRST_NAME:-1
+}
+)
+;
+
+.....................FILTER CONDITION...........................
+
+db.emp.find({SALARY:($gt:5000)},{FIRST_NAME: 1,
+LAST_NAME: 1,
+_id: 0,
+SALARY:1
+});
+
+
+.....................OR CONDITION..............................
+
+db.emp.find({($or:[{SALARY:20000},{SALARY:5000}])},
+{
+FIRST_NAME: 1,
+LAST_NAME: 1,
+SALARY:1
+});
+
+
+...................................................................................
+5000-10000
+
+12000
+
+
+
+db.emp.find
+(
+
+{
+$or:[{SALARY:{$gt:5000,&lt:10000}},{SALARY:12000}}]
+},
+{FIRST_NAME: 1,
+LAST_NAME: 1,
+SALARY:1}
+);
+
+......................Insert A Record.......................
+
+db.emp2.insert({"EMPLOYEE_ID" : 119, "FIRST_NAME" : "Karen", "LAST_NAME" : "Colmenares", "EMAIL" : "KCOLMENA", "PHONE_NUMBER" : "515.127.4566", "HIRE_DATE" : "10-AUG-99", "JOB_ID" : "PU_CLERK", "SALARY" : 2500, "MANAGER_ID" : 114, "DEPARTMENT_ID" : 30});
+
+
+db.emp2.insert({"EMPLOYEE_ID" : 119, "FIRST_NAME" : "Karen", "LAST_NAME" : "Colmenares", "EMAIL" : "KCOLMENA", "PHONE_NUMBER" : "515.127.4566", "HIRE_DATE" : "10-AUG-99", "JOB_ID" : "PU_CLERK", "SALARY" : 2500, "MANAGER_ID" : 114, "DEPARTMENT_ID" : 30,"Address":"Pune"});
+
+db.emp2.find({},{Address:1});
+
+
+..........REMOVE AND UPDATE.............
+
+db.emp.remove({EMPLOYEE_ID:102},{EMPLOYEE_ID:1});
+
+db.emp.find({EMPLOYEE_ID:103},{EMPLOYEE_ID:1,SALARY:1})
+
+db.emp.update({EMPLOYEE_ID:103},{$set:{SALARY:20000}});
+
+db.emp.find({EMPLOYEE_ID:103},{EMPLOYEE_ID:1,SALARY:1})
+
+
+.....................AGGREGATE..........................................
+
+
+db emp group
+
+key    did
+Intail   sum=0 
+reduce   obj,prev
+
+
+obj=current value
+prev=previous value
+
+sum=obj+PREV;
+
+
+db.emp.group()
+
+
+
+db.emp.group(
+{
+key: {
+DEPARTMENT_ID:true
+},
+
+intial:
+{
+s:0,
+c:0,
+avg:0
+},
+reduce: function(obj,prev)
+{
+prev.s= prev.s + obj.SALARY;
+prev.c++;
+},
+finalize: function(prev)
+{
+prev.avg=prev.s/prev.c;
+delete.prev.s;
+delete.prev.c;
+}
+
+}
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

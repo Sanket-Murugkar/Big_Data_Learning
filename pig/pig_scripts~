@@ -1,0 +1,93 @@
+START-UP
+
+
+employees = LOAD '/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:int,FIRST_NAME:chararray,LAST_NAME:chararray,
+EMAIL:chararray,PHONE_NUMBER:chararray,HIRE_DATE:chararray,
+JOB_ID:chararray,SALARY:int,MANAGER_ID:int,DEPARTMENT_ID:int);
+
+DESCRIBE employees;
+
+EMP_FILTERED = FILTER employees BY SALARY > 5000;
+
+NESTED = FOREACH EMP_FILTERED GENERATE HIRE_DATE, SUBSTRING(HIRE_DATE,0,2) AS DAY, SUBSTRING(HIRE_DATE,3,6) AS MONTH;
+
+GRP = GROUP NESTED BY (MONTH, DAY);
+
+M = FOREACH GRP GENERATE group, AVG(EMP_FILTERED.SALARY), COUNT(EMP_FILTERED.$0); 
+
+STORE employees INTO '/home/itelligence/Dataset/PigEmitted' USING PigStorage('~','-schema');
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------======================================================================================================================================
+JOIN
+
+
+
+TRANSACTIONS = load 'data/transactions' using PigStorage('\t') as (id:int, product:int, user:int, purchase_amount:double, description:chararray);
+
+A = JOIN TRANSACTIONS by user LEFT OUTER, USERS by id;
+
+B = GROUP A by product;
+
+C = FOREACH B {
+  LOCS = DISTINCT A.location;
+  GENERATE group, COUNT(LOCS) as location_count;
+};
+
+DUMP C
+
+
+
+======================================================================================================================================
+--------------------------------------------------------------------------------------------------------------------------------------
+WORDCOUNT
+
+
+A = load '------/input.txt';
+B = foreach A generate flatten(TOKENIZE((chararray)$0)) as word;
+C = group B by word;
+D = foreach C generate COUNT(B), group;
+store D into '------/wordcount';
+
+======================================================================================================================================
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Problem Stmt : find the number of items bought by each customer
+-- which item he/she bought highest time.
+-- load the input data :: Schema ( customerId , itemId , order Date, delivery Date );
+
+
+orders = load '/testData100k' using PigStorage(',') as (cstrId:int, itmId:int, orderDate: long, deliveryDate: long );
+
+
+-- group by  customer-id and item-id
+
+grpd_cstr_itm = group orders by (cstrId,itmId);
+grpd_cstr_itm_cnt = foreach grpd_cstr_itm generate group.cstrId as cstrId, group.itmId as itmId, COUNT(orders) as itmCnt;
+
+
+-- group by cstrId 
+
+grpd_cstr = group grpd_cstr_itm_cnt by cstrId ;
+describe grpd_cstr;
+
+
+-- grpd_cstr: {group: int,grpd_cstr_itm_cnt: {cstrId: int,itmId: int,itmCnt: long}}
+-- iterate over grpd_cstr_itm and find total number of items bought by customer and which item he/or she bought higest time.
+result = foreach grpd_cstr{
+	total_orders = SUM(grpd_cstr_itm_cnt.itmCnt);
+	srtd_orders = order grpd_cstr_itm_cnt by itmCnt desc;
+	higest_bought = limit srtd_orders 1;
+	generate FLATTEN(higest_bought),total_orders as totalCnt;
+};
+-- result will contains ( customer_id , itm_id_bought_higest_times, number_of_times_it_bought, total_items);
+describe result;
+-- result: {higest_bought::cstrId: int,higest_bought::itmId: int,higest_bought::itmCnt: long,totalCnt: long}
+
+======================================================================================================================================
+--------------------------------------------------------------------------------------------------------------------------------------
+
+

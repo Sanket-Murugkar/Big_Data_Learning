@@ -1,0 +1,4 @@
+nc -lk 12345
+
+spark-submit --class com.etlhive.streaming_demo.Streaming_Demo   
+/home/vaibhav/Desktop/Spark_streaming/Spark_Streaming.jar /home/vaibhav/Desktop/Spark_streaming/Streaming_Input_Dir

@@ -1,0 +1,2 @@
+ pig -x local -param  Q=/home/itelligence/Desktop/csv/EMP2  -param P= /home/itelligence/Dataset/CSV/EMP.csv /home/itelligence/Desktop/Script.pig;
+

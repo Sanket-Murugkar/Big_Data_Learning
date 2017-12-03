@@ -1,0 +1,90 @@
+
+
+## Load the relation ###
+links_relation = LOAD '/home/itelligence/Desktop/pig/lens_data_set/links.csv' Using PigStorage(',') as (movieId: Int,imdbId : Int,tmdbId: Int);
+
+movie_relation= LOAD '/home/itelligence/Desktop/pig/lens_data_set/movies.csv' Using PigStorage(',') as (movieId:Int,title:chararray,genres:chararray);
+
+rating_relation= LOAD '/home/itelligence/Desktop/pig/lens_data_set/ratings.csv' Using PigStorage(',') as (userId:Int,movieId:Int,rating:float,timestamp:long);
+
+
+
+tag_relation= LOAD '/home/itelligence/Desktop/pig/lens_data_set/tags.csv' Using PigStorage(',') as (userId:Int,movieId:Int,tag:chararray,timestamp:long);
+
+
+
+
+###############Unique Ratings######################################
+
+ uniqueRatings = DISTINCT(FOREACH rating_relation generate rating);
+
+#######Number Of rating by each userId#############
+
+
+movies_by_user= group rating_relation by userId;
+
+count_of_rating_per_uid= FOREACH a GENERATE $0, COUNT($1);
+
+
+###########Average rating of a movie###############
+
+movies_by_rating =group rating_relation by movieId;
+
+average_rating_of_movie = FOREACH movies_by_rating  {
+
+sum =   (Double)SUM($1.rating);
+
+count = (Double)COUNT($1);
+
+GENERATE $0,(Double)sum/count;
+
+};
+#########Max and min rating of a movie###################
+
+max_min_rating_of_movie = FOREACH movies_by_rating  {
+
+max =   MAX($1.rating);
+
+min =   MIN($1.rating);
+
+GENERATE $0,max,min;
+
+};
+
+
+####Top 25 rated movie - movie Id,Name###################
+
+movies_by_rating =group rating_relation by movieId;
+
+average_rating_of_movie = FOREACH movies_by_rating  {
+
+sum =   (Double)SUM($1.rating);
+
+count = (Double)COUNT($1);
+
+GENERATE $0,(Double)sum/count,$1.;
+
+};
+
+Order_ratings = ORDER average_rating_of_movie by $1 DESC TOP 25;
+
+order_ratings_Top25 = LIMIT  Order_ratings 25;
+
+ratings_movie_join = JOIN order_ratings_Top25 by $0,movies by movieId; 
+
+top_25_movies = FOREACH ratings_movie_join generate movies::movieId,movies::title;
+
+
+###################################################################
+
+
+
+
+
+
+
+
+
+
+
+

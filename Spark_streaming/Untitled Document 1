@@ -1,0 +1,1 @@
+spark-submit --class package_nbame.class_name --jar JAR_PATH

@@ -1,0 +1,29 @@
+mysql --user=root --password=hr
+
+
+create table purchase(ip varchar(200),name varchar(2000),date DATE,product varchar(2000),amount Int);
+
+
+
+INSERT INTO purchase(ip,name,product,amount) values("117.222.61.132","abc","mobile",2000);
+
+INSERT INTO purchase(ip,name,product,amount) values("1.39.21.219","pqr","clothes",2000);
+
+
+INSERT INTO purchase(ip,name,product,amount) values("142.4.214.124","defg","laptop",2000);
+
+
+
+...............................................................
+
+
+
+Sqoop import
+
+
+sqoop  import --connect jdbc:mysql://localhost/vaibhav --username root --password hr --table purchase --target-dir /temp/ -m 1
+
+
+
+
+

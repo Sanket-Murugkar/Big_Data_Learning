@@ -1,0 +1,28 @@
+
+a.sources=s
+a.sinks=sk
+a.channels=c
+
+a.sources.s.type=spooldir
+a.sources.s.spoolDir=/home/itelligence/new
+
+
+a.sources.s.interceptors = i1
+a.sources.s.interceptors.i1.type = timestamp
+
+
+a.sources.s.interceptors = i2
+a.sources.s.interceptors.i2.type = static
+a.sources.s.interceptors.i2.key = name
+a.sources.s.interceptors.i2.value = etlHIve
+
+
+
+a.channels.c.type=file
+
+a.sinks.sk.type=hdfs
+a.sinks.sk.hdfs.path=/data/flume2/
+a.sinks.sk.hdfs.fileType=DataStream
+
+a.sources.s.channels=c
+a.sinks.sk.channel=c

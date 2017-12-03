@@ -1,0 +1,164 @@
+SELECT emp.name,emp.id, dept.name
+FROM emp JOIN dept 
+ON (emp.dept_ID = dept.dept_ID);
+
+================================================================================================================================================
+
+CREATE TABLE emp
+(
+EMPLOYEE_ID INT,FIRST_NAME STRING,LAST_NAME STRING,EMAIL STRING,PHONE_NUMBER STRING,HIRE_DATE STRING,JOB_ID STRING,SALARY INT,MANAGER_ID INT,DEPARTMENT_ID INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+;
+LOAD DATA LOCAL INPATH '/home/itelligence/Dataset/CSV/EMP.csv'
+INTO TABLE emp;
+
+
+========================================================================================================
+
+
+===================================================================================================================
+
+CREATE TABLE AMEX
+(exchange string,stock_symbol string,date string,stock_price_open string,stock_price_high string,stock_price_low string,stock_price_close string,stock_volume string,stock_price_adj_close string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+;
+LOAD DATA INPATH '/user/itelligence/AMEX/AMEX_daily_prices_S.csv'
+INTO TABLE AMEX;
+
+================================================================================================================================================
+
+LOAD DATA LOCAL INPATH '/home/itelligence/Dataset/CSV/EMP.csv'
+INTO TABLE EMP;
+
+================================================================================================================================================
+
+CREATE TABLE JOB_HIST
+(
+EMPLOYEE_ID INT,START_DATE STRING,END_DATE STRING,JOB_ID STRING,DEPARTMENT_ID INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+;
+
+LOAD DATA INPATH '/user/itelligence/data/Dataset/CSV/JOB_HISTORY.csv'
+INTO TABLE JOB_HIST;
+
+================================================================================================================================================
+
+SELECT station, year, AVG(max_temperature) FROM (
+  SELECT station, year, MAX(temperature) AS max_temperature
+  FROM records2
+  WHERE temperature != 9999
+    AND (quality = 0 OR quality = 1 OR quality = 4 OR quality = 5 OR quality = 9)
+  GROUP BY station, year ) mt 
+GROUP BY station, year;
+
+================================================================================================================================================
+
+CREATE TABLE EMP_2
+AS
+SELECT * 
+FROM EMP
+WHERE SALARY > 5000;
+
+================================================================================================================================================
+
+CREATE EXTERNAL TABLE emp5
+(
+EMPLOYEE_ID INT,FIRST_NAME STRING,LAST_NAME STRING,EMAIL STRING,PHONE_NUMBER STRING,HIRE_DATE STRING,JOB_ID STRING,SALARY STRING,MANAGER_ID STRING,DEPARTMENT_ID STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+
+LOCATION 'hdfs://localhost:8020/user/itelligence/data/new' 
+;
+LOAD DATA INPATH '/user/itelligence/data/CSV/EMP.csv'
+INTO TABLE emp2_hdfs;
+
+================================================================================================================================================
+
+package com.hadoopbook.hive;
+import org.apache.commons.lang.StringUtils;
+import org.apache.hadoop.hive.ql.exec.UDF;
+import org.apache.hadoop.io.Text;
+
+public class Strip extends UDF {
+  private Text result = new Text();
+  
+  public Text evaluate(Text str) {
+    if (str == null) {
+      return null;
+    }
+    result.set(StringUtils.strip(str.toString()));
+    return result;
+  }
+  public Text evaluate(Text str, String stripChars) {
+    if (str == null) {
+      return null;
+    }
+    result.set(StringUtils.strip(str.toString(), stripChars));
+    return result;
+  } }
+
+ADD JAR /path/to/hive-examples.jar;
+CREATE TEMPORARY FUNCTION strip AS 'com.hadoopbook.hive.Strip';
+
+% hive --auxpath /path/to/hive-examples.jar 
+SELECT strip('  bee  ') FROM dummy; 
+
+
+================================================================================================================================================
+
+package com.hadoopbook.hive;
+import org.apache.hadoop.hive.ql.exec.UDAF; 
+import org.apache.hadoop.hive.ql.exec.UDAFEvaluator; import org.apache.hadoop.io.IntWritable;
+public class Maximum extends UDAF {
+  public static class MaximumIntUDAFEvaluator implements UDAFEvaluator {
+    
+    private IntWritable result;
+    
+    public void init() {
+      result = null;
+    }
+    public boolean iterate(IntWritable value) {
+ if (value == null) {
+        return true;
+      }
+      if (result == null) {
+        result = new IntWritable(value.get());
+      } else {
+        result.set(Math.max(result.get(), value.get()));
+      }
+      return true;
+    }
+    public IntWritable terminatePartial() {
+      return result;
+    }
+    public boolean merge(IntWritable other) {
+      return iterate(other);
+    }
+    public IntWritable terminate() {
+      return result;
+    }
+  } }
+
+FROM HIVE PROMPT
+
+CREATE TEMPORARY FUNCTION maximum AS 'com.hadoopbook.hive.Maximum'; 
+SELECT maximum(temperature) FROM records; 
+
+=================================================================================================================================================
+
+
+
+
+
+
+

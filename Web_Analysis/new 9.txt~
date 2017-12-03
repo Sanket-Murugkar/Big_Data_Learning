@@ -1,0 +1,26 @@
+DEFINE ApacheCommonLogLoader org.apache.pig.piggybank.storage.apachelog.CommonLogLoader();
+
+
+DEFINE DATE_EXTRACT_dd_MMM_yyyy 
+org.apache.pig.piggybank.evaluation.util.apachelogparser.DateExtractor(
+'dd/MMM/yyyy:HH:mm:ss Z','dd/MMM/yyyy')
+
+DEFINE DATE_EXTRACT_Z
+org.apache.pig.piggybank.evaluation.util.apachelogparser.DateExtractor(
+'dd/MMM/yyyy:HH:mm:ss Z','Z')
+ 
+logs = LOAD '/in/common_access_log' USING ApacheCommonLogLoader AS (addr: chararray, logname: chararray, user: chararray, time: chararray, method: chararray, uri: chararray, proto: chararray, status: int, bytes: int);
+ 
+addrs = GROUP logs BY addr;
+ 
+counts = FOREACH addrs GENERATE flatten($0), COUNT($1) as count;
+ 
+DUMP counts;
+
+
+
+
+
+DATE_EXTRACT(time) as year
+
+logs =  FOREACH logs_base GENERATE remoteAddr,remoteLogname, year;

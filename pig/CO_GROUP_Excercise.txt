@@ -1,0 +1,13 @@
+
+                                                                            DEPT= LOAD '/home/itelligence/Desktop/DEPT.csv' USING PigStorage(',') AS (DEPARTMENT_ID:int,DNAME:chararray);
+
+employees = LOAD '/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:int,FIRST_NAME:chararray,LAST_NAME:chararray,
+EMAIL:chararray,PHONE_NUMBER:chararray,HIRE_DATE:chararray,
+JOB_ID:chararray,SALARY:int,MANAGER_ID:int,DEPARTMENT_ID:int);
+
+
+C = COGROUP employees by $9, DEPT by $0;
+
+ A= FOREACH C GENERATE $0,COUNT(employees),COUNT(DEPT);
+
+

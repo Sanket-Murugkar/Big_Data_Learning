@@ -1,0 +1,54 @@
+
+
+-- Static Partition
+CREATE TABLE amex_data1(exchange_code String,stock_symbol String,date String,dividends Float)
+PARTITIONED BY (dt String)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INPATH '/home/itelligence/Dataset/AMEX/AMEX_dividends_Q.csv' INTO table amex_data1 PARTITION(dt="abc") ;
+
+................................................................
+-- Dynmic partition
+
+
+
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+CREATE TABLE amex_data_Dynamic_part
+(
+exchange_code String,stock_symbol String,date String
+)
+PARTITIONED BY (dividends Float)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+INSERT OVERWRITE TABLE amex_data_Dynamic_part PARTITION(dividends)
+SELECT * FROM amex_data;
+
+
+..................................................................
+
+
+
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+CREATE TABLE amex_data_Bucketed_data
+(
+exchange_code String,stock_symbol String
+)
+PARTITIONED BY (dividends Float)
+CLUSTERED BY (date String)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+INSERT OVERWRITE TABLE amex_data_Dynamic_part PARTITION(dividends)
+SELECT * FROM amex_data;
+
+
+
+
+

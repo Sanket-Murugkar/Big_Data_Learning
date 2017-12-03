@@ -1,0 +1,17 @@
+while(true):
+	print(1: to create a new file)
+ print(2: to read existing file : which file to read : list down files present at certain location)
+print(3: to delete file)
+ option= input()
+
+
+// File path to be hard coded
+// accept input from user, append this into file and close the file
+
+
+	def create_file()
+
+	def read_file()
+
+	def delete_file()
+

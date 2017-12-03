@@ -1,0 +1,52 @@
+CREATE KEYSPACE PM2
+WITH replication = {'class':'SimpleStrategy','replication_factor' : 2};
+
+
+use PM2;
+
+
+describe tables;
+
+
+describe keyspaces;
+
+################################################################
+
+
+Create table emp
+(
+emp_id int PRIMARY KEY,
+first_name text,
+last_name text,
+salary varint,
+did int
+);
+
+
+COPY PM2.emp FROM '/home/vaibhav/Desktop/Cassandra/emp.csv'
+WITH DELIMITER=',' AND HEADER=TRUE;
+
+
+select * from emp;
+
+
+select * from emp where salary>500 ALLOW FILTERING;
+
+
+update emp
+set salary=200
+where emp_id>1;
+
+########BULk INSERT#############################################
+
+
+
+
+
+
+
+
+
+
+
+

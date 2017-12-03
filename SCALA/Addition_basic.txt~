@@ -1,0 +1,21 @@
+###################################################
+
+def addition()
+{
+println("Enter the value of a")
+val p=readInt();
+println("Enter the value of b")
+val q=readInt();
+println("sum is:",p+q)
+}
+
+#########################################################
+
+def additionWithParam(x:int,y:int)
+{
+println(s"addition of x and y is",x+y);
+
+}
+
+########################################################
+

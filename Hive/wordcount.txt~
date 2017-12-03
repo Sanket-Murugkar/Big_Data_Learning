@@ -1,0 +1,38 @@
+CREATE TABLE WC
+(
+WORD STRING
+
+);
+
+LOAD DATA LOCAL INPATH '/home/itelligence/hbase-0.94.20/README.txt'
+INTO TABLE WC;
+
+
+
+
+
+........................solution1.................................
+
+THIS WILL CREATE UNNECESSARY DISK SPACE
+CREATE TABLE T1
+AS
+SELECT EXPLODE(SPLIT(WORD,' ')) AS a
+from WC;
+
+
+
+select A, COUNT(*)
+FROM t1
+GROUP BT a;
+........................SOLUTION2..................................
+
+select A, COUNT(*)
+FROM (SELECT EXPLODE(SPLIT(WORD,' ')) AS a from WC) W
+GROUP BY a;
+
+
+
+
+
+
+ 

@@ -1,0 +1,6 @@
+spark-submit --class package_nbame.class_name JAR_PATH <Arguments>
+
+
+
+spark-submit --class com.etlhive.streaming_demo.Streaming_Demo   
+/home/vaibhav/Desktop/Spark_streaming/Spark_Streaming.jar /home/vaibhav/Desktop/Spark_streaming/Streaming_Input_Dir

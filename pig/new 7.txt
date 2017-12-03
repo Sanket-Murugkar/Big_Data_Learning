@@ -1,0 +1,8 @@
+A = load 'input' AS (line:chararray);
+B = FOREACH A GENERATE REGEX_EXTRACT(line,'(.*[^0-9])',1);
+DUMP B;
+Option2:
+
+A = load 'input' AS (line:chararray);
+B = FOREACH A GENERATE REGEX_EXTRACT(line,'(^[A-Za-z]+).*',1);
+DUMP B;

@@ -1,0 +1,50 @@
+create table employees(EMPLOYEE_ID int,FIRST_NAME varchar(30),LAST_NAME varchar(30),EMAIL varchar(30),PHONE_NUMBER varchar(30),HIRE_DATE varchar(30),JOB_ID int,SALARY int,MANAGER_ID int,DEPARTMENT_ID int, PRIMARY KEY (EMPLOYEE_ID));
+-----------------------------------------------------------------------------------
+
+ALTER TABLE employees
+ADD CONSTRAINT pk_EMP_ID PRIMARY KEY (EMPLOYEE_ID)
+
+
+LOAD DATA LOCAL INFILE '/home/itelligence/Dataset/CSV/EMP.csv' INTO TABLE employees
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+l-----------------------------------------------------------------------------------
+
+mysql -h ubuntu -u root -p
+
+
+sqoop list-databases --connect "jdbc:mysql://localhost" --username root --password hr
+
+
+sqoop import --connect jdbc:mysql://localhost/deval --username root --password hr --table employees --target-dir /sqoop/database/deval
+
+
+sqoop  import --connect jdbc:mysql://localhost/mydb --username user1 --password p123 --table emp --target-dir MyEmp
+
+
+
+sqoop  import --connect jdbc:mysql://localhost/vaibhav --username root --password hr --table purchase target-dir /temp/
+
+sqoop import --connect jdbc:mysql://localhost/vaibhav --username root --password hr --table employees --hive-overwrite --hive-table employees --target-dir MyEmp
+
+
+columns "EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,PHONE_NUMBER,HIRE_DATE,JOB_ID,SALARY,MANAGER_ID,DEPARTMENT_ID"
+
+
+create table employees(EMPLOYEE_ID int,FIRST_NAME varchar(30),LAST_NAME varchar(30),EMAIL varchar(30),PHONE_NUMBER varchar(30),HIRE_DATE varchar(30),JOB_ID int,SALARY int,MANAGER_ID int,DEPARTMENT_ID int);
+
+
+sqoop import --connect jdbc:mysql://localhost/vaibhav --username root --password hr --table employees --hive-import
+
+
+sqoop import --connect jdbc:mysql://localhost/vaibhav --username root --password 
+hr --query "SELECT * FROM employees AS employees --hive-import 
+--hive-table employees --target-dir hive_table1_data`
+
+
+
+sqoop import --connect jdbc:mysql://localhost/vaibhav \ --table employees --username root --password hr --hive-import
+
+
+sqoop import --connect jdbc:mysql://192.168.71.133\vaibhav --username root -- password hr --table employees --hive-import

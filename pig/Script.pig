@@ -1,0 +1,11 @@
+REGISTER /home/itelligence/pig-0.11.1/contrib/piggybank/java/piggybank.jar;
+
+EMP = LOAD '$P' using PigStorage(',') AS(EMPLOYEE_ID:INT,FIRST_NAME:CHARARRAY,LAST_NAME:CHARARRAY,
+EMAIL:CHARARRAY,PHONE_NUMBER:CHARARRAY,HIRE_DATE:CHARARRAY,
+JOB_ID:CHARARRAY,SALARY:INT,MANAGER_ID:INT,DEPARTMENT_ID:INT);
+
+A =  FOREACH EMP GENERATE FIRST_NAME,
+org.apache.pig.piggybank.evaluation.string.LENGTH(FIRST_NAME);
+
+
+STORE A INTO '$Q' using PigStorage('|');

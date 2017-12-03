@@ -1,0 +1,1 @@
+sqoop import --connect jdbc:mysql://localhost:3306/vaibhav --username root --password hr --table employees --target-dir /sqopp/example2 --incremental append --check-column employee_id --last-value 206

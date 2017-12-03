@@ -1,0 +1,3 @@
+117.222.61.132,abc,null,mobile,2000
+1.39.21.219,pqr,null,clothes,2000
+144.36.215.189,defg,null,laptop,2000

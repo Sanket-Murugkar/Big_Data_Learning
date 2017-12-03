@@ -1,0 +1,16 @@
+/home/itelligence/pig-0.11.1/contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/XMLLoader.java
+
+
+
+org.apache.pig.piggybank.storage.XMLLoader
+
+
+<record>\\s*<id>(.*)</id>\\s*<name>(.*)</name>
+<fn>(.*)</fn>
+<ln>(.*)</ln>
+<salary>(.*)</salary>
+</record>
+
+
+
+

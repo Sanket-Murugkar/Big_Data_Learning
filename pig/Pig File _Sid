@@ -1,0 +1,117 @@
+pig -x local
+
+=======DATA INGESTION(SCHEMALESS)============
+
+A = LOAD'/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',');
+
+DUMP A;
+
+SELECT FN, LN.......GENERATE FN, LN
+FROM EMP......... FOREACH EMP
+
+B = FOREACH A GENERATE $1,$2,$7;
+DUMP B;
+
+DESCRIBE B;
+
+we can typecast as well. this is not during runtime loading. For runtimeloading use the Schema based query below.
+
+B =  FOREACH A GENERATE $1 AS FIRST_NAME:CHARARRAY,$2 AS LAST_NAME:CHARARRAY;
+
+=======DATA INGESTION(SCHEMA BASED)============
+
+EMP = LOAD'/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:INT,FIRST_NAME:CHARARRAY,LAST_NAME:CHARARRAY,EMAIL:CHARARRAY,PHONE_NUMBER:CHARARRAY,HIRE_DATE:CHARARRAY,JOB_ID:CHARARRAY,SALARY:INT,MANAGER_ID:INT,DEPARTMENT_ID:INT);
+
+A = LOAD '/home/itelligence/Desktop/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:INT,FIRST_NAME:CHARARRAY,LAST_NAME:CHARARRAY,EMAIL:CHARARRAY,PHONE_NUMBER:CHARARRAY,HIRE_DATE:CHARARRAY,JOB_ID:CHARARRAY,SALARY:INT,MANAGER_ID:INT,DEPARTMENT_ID:INT);
+
+
+
+A = LOAD '/home/itelligence/Sidpractice/PIG scripts and datasets/date_example.txt' using PigStorage(',') AS (NAME:CHARARRAY,ToDate(BIRTH_DATE,'dd-MMM-yyyy'));
+
+A = LOAD '/home/itelligence/Sidpractice/PIG scripts and datasets/date_example.txt' using PigStorage(',') AS (NAME:CHARARRAY,BIRTH_DATE:CHARARRAY);
+
+EMP = LOAD'/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:INT,FIRST_NAME:CHARARRAY,LAST_NAME:CHARARRAY,EMAIL:CHARARRAY,PHONE_NUMBER:CHARARRAY,ToDate(HIRE_DATE,'dd-MMM-yyyy'),JOB_ID:CHARARRAY,SALARY:INT,MANAGER_ID:INT,DEPARTMENT_ID:INT);
+
+
+
+B = FOREACH EMP GENERATE FIRST_NAME, LAST_NAME, SALARY;
+
+This operation is called as schema on Read - i.e. while loading/reading the data.
+
+RDBMS uses schemaon Write.
+
+=======DATA FILTERING============
+
+Q = FILTER EMP BY SALARY>5000;
+Q= FILTER EMP BY SUBSTRING($1,0,1)== 'A';
+
+Q= FILTER EMP BY SUBSTRING($05,3,6)== 'JUL' OR SUBSTRING($05,3,6) =='AUG' OR SUBSTRING($05,3,6)=='SEP';
+
+C = FOREACH B GENERATE ToDate(BIRTH_DATE,'dd-MMM-yyyy');
+
+=======GROUPING AND AGGREGATION============
+
+GRP = GROUP EMP BY $9;
+
+EX1= FOREACH GRP GENERATE $0, COUNT($1);
+
+EX2= FOREACH GRP GENERATE $0, AVG($1.$7);
+
+EX3= FOREACH GRP GENERATE $0, AVG(EMP.SALARY);
+
+EX4 = FOREACH GRP GENERATE $0,AVG($1.$7);
+
+ANOTHER EXAMPLE:
+
+S = GROUP EMP BY $6;
+DUMP S;
+W = FOREACH S GENERATE $0,$1;
+DUMP W;
+W = FOREACH S GENERATE $0,COUNT($1);
+DUMP W;
+W = FOREACH S GENERATE $0,AVG($1.$7);
+DUMP W;
+W = FOREACH S GENERATE COUNT($1);
+DUMP W;
+
+======REGEX=========
+
+.* means any character/numeral can come n number of times
+
+A = LOAD'/home/itelligence/Sidpractice/PIG scripts and datasets/regex.txt';
+B=FOREACH A GENERATE $0;
+B= FOREACH A GENERATE REGEX_EXTRACT_ALL($0,'(.*) (.*),(.*):(.*)'); or
+B= FOREACH A GENERATE FLATTEN REGEX_EXTRACT_ALL($0,'(.*) (.*),(.*):(.*)'); -- this would remove the extra parantheses in the output
+C = FOREACH B GENERATE $1;
+C = FOREACH B GENERATE $2;
+
+eRROR PARSING:
+
+PIGEX= LOAD '/home/itelligence/pig_1500196684247.log';
+PIGEX1= FILTER PIGEX BY SUBSTRING($0,0,5)=='ERROR';
+FINAL = FOREACH PIGEX1 GENERATE FLATTEN(REGEX_EXTRACT_ALL($0,'ERROR (.*):(.*)'));
+
+
+======RANK and HISTORY================
+EMP = LOAD'/home/itelligence/Dataset/CSV/EMP.csv' USING PigStorage(',') AS (EMPLOYEE_ID:INT,FIRST_NAME:CHARARRAY,LAST_NAME:CHARARRAY,EMAIL:CHARARRAY,PHONE_NUMBER:CHARARRAY,HIRE_DATE:CHARARRAY,JOB_ID:CHARARRAY,SALARY:INT,MANAGER_ID:INT,DEPARTMENT_ID:INT);
+
+A=FOREACH EMP GENERATE *;
+A=FOREACH EMP GENERATE $1,$2,$7;
+B=ORDER A BY $0;
+B=ORDER A BY $0 DESC;
+C=DISTINCT B;
+D = ORDER C BY $0;
+E= RANK D;
+<grunt> HISTORY;
+
+====== WORD COUNT================
+
+Unstrucutred data will not have any delimiter.
+We can run script as well byt putting all the queries in a sequential manner in a file.
+exec command is used to execute the pig scripts.
+
+
+
+
+
+

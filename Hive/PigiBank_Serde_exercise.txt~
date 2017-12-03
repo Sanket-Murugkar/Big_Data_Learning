@@ -1,0 +1,40 @@
+
+........................................................
+
+
+Pigibank serde
+
+
+CREATE TABLE EMP_REGEX
+(
+FIRST_NAME STRING,
+LAST_NAME STRING,
+CITY STRING,
+SALARY INT
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.RegexSerDe'
+WITH SERDEPROPERTIES
+(
+'input.regex' = "(.*) (.*) (.*):(.*)"
+)
+;
+
+LOAD DATA LOCAL INPATH '/home/itelligence/Desktop/Hive/Multiple_Regex.txt'
+INTO TABLE EMP_REGEX;
+.................................................................
+
+
+/home/itelligence/hive-0.12.0/lib/hive-serde-0.12.0/org/apache/hadoop/hive
+
+
+org.apache.hadoop.hive.serde2.RegexSerDe
+
+
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+
+
+
+
+
